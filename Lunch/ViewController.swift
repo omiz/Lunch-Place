@@ -12,21 +12,15 @@ import TTFortuneWheel
 class ViewController: UIViewController {
 
     @IBOutlet weak var spinButton: UIButton!
+    
     @IBOutlet weak var spinningWheel: TTFortuneWheel!
+    
+    @IBOutlet weak var resultLabel: UILabel!
     
     lazy var slices: [CarnivalWheelSlice] = makeSlices()
     
     func makeSlices() -> [CarnivalWheelSlice] {
-        return [.init(title: "Amplio"),
-                .init(title: "Block House"),
-                .init(title: "Rewe"),
-                .init(title: "Prime kabab Donner"),
-                .init(title: "Prime kabab chinese"),
-                .init(title: "Prime kabab curry wurst"),
-                .init(title: "Amplio"),
-                .init(title: "L'Osteria"),
-                .init(title: "Thai"),
-                .init(title: "Order in")]
+        return []
     }
     
     override func viewDidLoad() {
@@ -35,6 +29,9 @@ class ViewController: UIViewController {
         spinningWheel.slices = slices
         spinningWheel.equalSlices = true
         spinningWheel.frameStroke.width = 0
+        
+        
+        spinningWheel.initialDrawingOffset = -90
         
         slices.enumerated().forEach { (pair) in
             let slice = pair.element
@@ -57,18 +54,25 @@ class ViewController: UIViewController {
     
     @IBAction func rotateButton(_ sender: Any) {
         
-        let count = spinningWheel.slices.count
+        self.resultLabel.text = nil
         
-        spinningWheel.startAnimating()
+        let count = spinningWheel.slices.count
         
         spinButton.isEnabled = false
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+        var index: Int = .random(in: 0..<count)
+        
+        if index == 0 {
+            index = Int.random(in: 0..<count)
+        }
+        
+        self.spinningWheel.startAnimating(fininshIndex: index) { finished in
             
-            self.spinningWheel.startAnimating(fininshIndex: .random(in: 0..<count)) { _ in
-                
-                self.spinButton.isEnabled = true
-            }
+            guard finished else { return }
+            
+            self.spinButton.isEnabled = true
+            
+            self.resultLabel.text = self.spinningWheel.slices[index].title
         }
     }
 }
