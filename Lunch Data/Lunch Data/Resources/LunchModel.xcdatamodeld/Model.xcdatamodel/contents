@@ -1,7 +1,28 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="14490.98" systemVersion="18E226" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
-    <entity name="Place" representedClassName="Place" syncable="YES" codeGenerationType="class"/>
+    <entity name="Cuisine" representedClassName="Cuisine" syncable="YES" codeGenerationType="class">
+        <attribute name="id" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <uniquenessConstraints>
+            <uniquenessConstraint>
+                <constraint value="id"/>
+            </uniquenessConstraint>
+        </uniquenessConstraints>
+    </entity>
+    <entity name="EatingPlace" representedClassName="EatingPlace" syncable="YES" codeGenerationType="class">
+        <attribute name="id" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="logo" optional="YES" attributeType="Transformable" valueTransformerName="ImageTransformer" customClassName="UIImage" syncable="YES"/>
+        <attribute name="mapItem" optional="YES" attributeType="Transformable" valueTransformerName="MapItemTransformer" customClassName="MapKit.MKMapItem" syncable="YES"/>
+        <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="type" optional="YES" attributeType="String" syncable="YES"/>
+        <uniquenessConstraints>
+            <uniquenessConstraint>
+                <constraint value="id"/>
+            </uniquenessConstraint>
+        </uniquenessConstraints>
+    </entity>
     <elements>
-        <element name="Place" positionX="-63" positionY="-18" width="128" height="45"/>
+        <element name="EatingPlace" positionX="-63" positionY="-18" width="116.45703125" height="118"/>
+        <element name="Cuisine" positionX="118.41796875" positionY="-5.41015625" width="128" height="75"/>
     </elements>
 </model>

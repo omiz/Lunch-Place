@@ -8,6 +8,7 @@
 
 import UIKit
 import TTFortuneWheel
+import Lunch_Data
 
 class ViewController: UIViewController {
 
@@ -20,7 +21,13 @@ class ViewController: UIViewController {
     lazy var slices: [CarnivalWheelSlice] = makeSlices()
     
     func makeSlices() -> [CarnivalWheelSlice] {
-        return []
+        return [.init(title: "Amplio"),
+                .init(title: "Block House"),
+                .init(title: "Prime kabab Donner"),
+                .init(title: "Prime kabab chinese"),
+                .init(title: "Prime kabab curry wurst"),
+                .init(title: "L'Osteria"),
+                .init(title: "Thai")]
     }
     
     override func viewDidLoad() {
@@ -60,11 +67,7 @@ class ViewController: UIViewController {
         
         spinButton.isEnabled = false
         
-        var index: Int = .random(in: 0..<count)
-        
-        if index == 0 {
-            index = Int.random(in: 0..<count)
-        }
+        let index: Int = Array.init(0..<count).shuffled()[.random(in: 0..<count)]
         
         self.spinningWheel.startAnimating(fininshIndex: index) { finished in
             

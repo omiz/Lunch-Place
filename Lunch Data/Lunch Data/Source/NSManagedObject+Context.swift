@@ -9,11 +9,15 @@
 import CoreData
 import Utility
 
-protocol ManagedObjectProtocol {}
+public protocol ManagedObjectProtocol {}
 
 extension NSManagedObject: ManagedObjectProtocol {}
 
-extension ManagedObjectProtocol where Self: NSManagedObject {
+public extension ManagedObjectProtocol where Self: NSManagedObject {
+    
+    typealias UpdateBlock = (Self) -> Void
+    
+    typealias CompletionBlock = (Error?) -> Void
     
     fileprivate static var context: NSManagedObjectContext {
         return CoreDataManager.shared.newViewContext()
@@ -31,5 +35,56 @@ extension ManagedObjectProtocol where Self: NSManagedObject {
         let result = try? context.fetch(fetchRequest)
         
         return result ?? []
+    }
+    
+    static func new() {
+        
+        new { _ in }
+    }
+    
+    static func new(_ updateBlock: @escaping UpdateBlock) {
+        
+        new(updateBlock) { _ in }
+    }
+    
+    static func new(_ updateBlock: @escaping UpdateBlock, completion: @escaping CompletionBlock) {
+
+        let context = CoreDataManager.shared.newBackgroundContext()
+        
+        context.perform {
+            
+             let entityName = String(class: self)
+            
+            if let entity = NSEntityDescription.entity(forEntityName: entityName, in: context) {
+
+                updateBlock(Self(entity: entity, insertInto: context))
+            }
+            
+            do {
+                try context.save()
+                completion(nil)
+            } catch {
+                completion(error)
+            }
+        }
+    }
+    
+    func update(_ block: @escaping UpdateBlock, completion: CompletionBlock? = nil) {
+        
+        let context = CoreDataManager.shared.newBackgroundContext()
+        
+        let object = context.object(with: objectID) as! Self
+        
+        context.perform {
+            
+            block(object)
+            
+            do {
+                try context.save()
+                completion?(nil)
+            } catch {
+                completion?(error)
+            }
+        }
     }
 }
